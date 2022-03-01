@@ -20,14 +20,12 @@ public class Database {
                 PreparedStatement pstmt = conn.prepareStatement( QUERY )
         )
         {
-            pstmt.setString( 1, isbn);
-            ResultSet results = pstmt.executeQuery();
-            while (results.next()){
-                System.out.print( results.getString("Autore") + " " + results.getString("Titolo"));
-
-            }
+            Library library = new Library();
+            System.out.println(library.read(conn));
         } catch ( SQLException e ) {
             e.printStackTrace();
         }
+
+
     }
 }
