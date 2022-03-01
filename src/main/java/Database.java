@@ -9,9 +9,9 @@ public class Database {
             e.printStackTrace();
         }
         String isbn = "FJALSS";
-        final String DB_URL = "jdbc:mysql://localhost/scuola";
-        final String USER = "root";
-        final String PASS = "rootroot";
+        final String DB_URL = "jdbc:mysql://rds-mysql-main.ck4bf8ke7zt9.eu-central-1.rds.amazonaws.com/School";
+        final String USER = "admin";
+        final String PASS = "Ym4&lrSyAGv";
         final String QUERY = "SELECT Autore,Titolo FROM Libri WHERE ISBN = ?";
         String username = null;
 
