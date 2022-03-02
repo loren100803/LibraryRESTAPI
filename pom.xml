@@ -7,6 +7,8 @@
     <groupId>org.example</groupId>
     <artifactId>biblioteca</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
     <build>
         <plugins>
             <plugin>
@@ -18,6 +20,7 @@
                     <programs>
                         <program>
                             <mainClass>launch.Main</mainClass>
+                            <name>webapp</name>
                         </program>
                     </programs>
                 </configuration>
@@ -44,7 +47,7 @@
     </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>8.5.23</tomcat.version>
+        <tomcat.version>8.5.38</tomcat.version>
     </properties>
     <dependencies>
     <dependency>
