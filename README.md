@@ -1,4 +1,4 @@
-# JAVA REST API Book Library 
+# JAVA Simple REST API Book Library 
 # Made With
 ```
 Embedded Tomcat
