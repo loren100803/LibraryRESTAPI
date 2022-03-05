@@ -7,7 +7,7 @@ import java.util.List;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-@Path("/api/book")
+@Path("/book")
 public class Library {
     private final String error = "Server error, contact administrators";
     private boolean checkParams(String isbn,String autore, String titolo){
@@ -23,7 +23,7 @@ public class Library {
         final String[] data = Database.getData();
         try(
 
-                Connection conn = DriverManager.getConnection(data[0], data[1], data[2]);
+                Connection conn = DriverManager.getConnection(data[0]);
                 PreparedStatement pstmt = conn.prepareStatement( QUERY )
         ) {
             ResultSet results =  pstmt.executeQuery();
@@ -59,7 +59,7 @@ public class Library {
         final String[] data = Database.getData();
         try(
 
-                Connection conn = DriverManager.getConnection(data[0], data[1], data[2]);
+                Connection conn = DriverManager.getConnection(data[0]);//, data[1], data[2]);
                 PreparedStatement pstmt = conn.prepareStatement( QUERY )
         ) {
             pstmt.setString(1,titolo);
@@ -90,7 +90,7 @@ public class Library {
         final String[] data = Database.getData();
         try(
 
-                Connection conn = DriverManager.getConnection(data[0], data[1], data[2]);
+                Connection conn = DriverManager.getConnection(data[0]);
                 PreparedStatement pstmt = conn.prepareStatement( QUERY )
         ) {
             pstmt.setString(1,isbn);
@@ -119,7 +119,7 @@ public class Library {
         final String[] data = Database.getData();
         try(
 
-                Connection conn = DriverManager.getConnection(data[0], data[1], data[2]);
+                Connection conn = DriverManager.getConnection(data[0]);
                 PreparedStatement pstmt = conn.prepareStatement( QUERY )
         ) {
             pstmt.setString(1,isbn);
