@@ -159,7 +159,7 @@ public class Library {
         }
         int quantita = 0;
         final String QUERY = "INSERT INTO Prestiti(idUtente, ISBN, dataInizio, dataFine) VALUE(?,?,?,?)";
-        final String querySelezionaQuantita = "SELECT quantita FROM Libri WHERE ISBN = '"+ISBN+"'";
+        final String querySelezionaQuantita = "SELECT Quantità FROM Libri WHERE ISBN = '"+ISBN+"'";
         
         final String[] data = Database.getData();
         try(
@@ -180,7 +180,61 @@ public class Library {
             }
 
             if(quantita > 0 ){
-                final String QUERYModificaQuantita = "UPDATE Libri SET quantita = quantita - '"+quantita+"'";
+                pstmt.execute();
+                final String QUERYModificaQuantita = "UPDATE Libri SET Quantità = quantita -1";
+                PreparedStatement pstmt2 = conn.prepareStatement( QUERYModificaQuantita );
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            String obj = new Gson().toJson(error);
+            return Response.serverError().entity(obj).build();
+        }
+        String obj = new Gson().toJson("Libro con ISBN:" + ISBN + " aggiunto con successo");
+        return Response.ok(obj,MediaType.APPLICATION_JSON).build();
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+    @POST
+    @Path("/restituzione")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response create(@FormParam("idPrestito") int idPrestito,
+                           @FormParam("ISBN") String isbn,
+                           @FormParam("restituito") String restituito){
+        if(checkParams(idPrestito, ISBN, restituito)) {
+            String obj = new Gson().toJson("Parameters must be valid");
+            return Response.serverError().entity(obj).build();
+        }
+        int quantita = 0;
+        final String QUERY = "UPDATE Prestiti SET restituito='si'";
+        final String QUERY1 = "UPDATE Libri SET Quantità= Quantità+1";
+        
+        final String[] data = Database.getData();
+        try(
+
+                Connection conn = DriverManager.getConnection(data[0]);
+                PreparedStatement pstmt = conn.prepareStatement( QUERY );
+                PreparedStatement pstmt1 = conn.prepareStatement( QUERY1 );
+        ) {
+            
+
+           
+            if(quantita > 0 ){
+                pstmt.execute();
+                final String QUERYModificaQuantita = "UPDATE Libri SET Quantità = quantita -1";
                 PreparedStatement pstmt2 = conn.prepareStatement( QUERYModificaQuantita );
             }
         }catch (SQLException e){
