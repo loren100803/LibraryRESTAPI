@@ -132,4 +132,65 @@ public class Library {
         String obj = new Gson().toJson("Libro con ISBN:" + isbn + " eliminato con successo");
         return Response.ok(obj,MediaType.APPLICATION_JSON).build();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    @POST
+    @Path("/prestito")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response create(@FormParam("idUtente") int idUtente,
+                           @FormParam("ISBN") String isbn,
+                           @FormParam("dataInizio") String dataInizio,
+                           @FormParam("dataFine")String dataFine,
+                           @FormParam("restituito") String restituito){
+        if(checkParams(idUtente, isbn, dataInizio, dataFine, restituito)) {
+            String obj = new Gson().toJson("Parameters must be valid");
+            return Response.serverError().entity(obj).build();
+        }
+        int quantita = 0;
+        final String QUERY = "INSERT INTO Prestiti(idUtente, ISBN, dataInizio, dataFine) VALUE(?,?,?,?)";
+        final String querySelezionaQuantita = "SELECT quantita FROM Libri WHERE ISBN = '"+ISBN+"'";
+        
+        final String[] data = Database.getData();
+        try(
+
+                Connection conn = DriverManager.getConnection(data[0]);
+                PreparedStatement pstmt = conn.prepareStatement( QUERY );
+                PreparedStatement pstmt1 = conn.prepareStatement( querySelezionaQuantita );
+        ) {
+            pstmt.setString(1, idUtente);
+            pstmt.setString(2, ISBN);
+            pstmt.setString(3, dataInizio);
+            pstmt.setString(4, dataFine);
+            pstmt.execute();
+
+            ResultSet r = pstmt1.executeQuery();
+            while(r.next()){
+                quantita = Integer.parseInt(r.getString("quantita"));
+            }
+
+            if(quantita > 0 ){
+                final String QUERYModificaQuantita = "UPDATE Libri SET quantita = quantita - '"+quantita+"'";
+                PreparedStatement pstmt2 = conn.prepareStatement( QUERYModificaQuantita );
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            String obj = new Gson().toJson(error);
+            return Response.serverError().entity(obj).build();
+        }
+        String obj = new Gson().toJson("Libro con ISBN:" + ISBN + " aggiunto con successo");
+        return Response.ok(obj,MediaType.APPLICATION_JSON).build();
+    }
+
+
 }
