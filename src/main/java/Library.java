@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 @Path("/book")
 public class Library {
     private final String error = "Server error, contact administrators";
-    private boolean checkParams(String isbn,String autore, String titolo){
+    private boolean checkParams(int idPrestito,String isbn, String autore, String titolo){
         return (isbn == null || isbn.trim().length() == 0) || (titolo == null || titolo.trim().length() == 0) || (autore == null || autore.trim().length() == 0);
     }
 
@@ -106,6 +106,10 @@ public class Library {
         return Response.ok(obj,MediaType.APPLICATION_JSON).build();
     }
 
+    private boolean checkParams(String isbn, String titolo, String autore) {
+        return false;
+    }
+
     @DELETE
     @Path("/delete")
     @Produces(MediaType.APPLICATION_JSON)
@@ -159,7 +163,7 @@ public class Library {
         }
         int quantita = 0;
         final String QUERY = "INSERT INTO Prestiti(idUtente, ISBN, dataInizio, dataFine) VALUE(?,?,?,?)";
-        final String querySelezionaQuantita = "SELECT Quantità FROM Libri WHERE ISBN = '"+ISBN+"'";
+        final String querySelezionaQuantita = "SELECT Quantità FROM Libri WHERE ISBN = '"+isbn+"'";
         
         final String[] data = Database.getData();
         try(
@@ -168,8 +172,8 @@ public class Library {
                 PreparedStatement pstmt = conn.prepareStatement( QUERY );
                 PreparedStatement pstmt1 = conn.prepareStatement( querySelezionaQuantita );
         ) {
-            pstmt.setString(1, idUtente);
-            pstmt.setString(2, ISBN);
+            pstmt.setInt(1, idUtente);
+            pstmt.setString(2, isbn);
             pstmt.setString(3, dataInizio);
             pstmt.setString(4, dataFine);
             pstmt.execute();
@@ -189,12 +193,11 @@ public class Library {
             String obj = new Gson().toJson(error);
             return Response.serverError().entity(obj).build();
         }
-        String obj = new Gson().toJson("Libro con ISBN:" + ISBN + " aggiunto con successo");
+        String obj = new Gson().toJson("Libro con ISBN:" + isbn + " aggiunto con successo");
         return Response.ok(obj,MediaType.APPLICATION_JSON).build();
     }
 
 
-}
 
 
 
@@ -204,8 +207,9 @@ public class Library {
 
 
 
-
-
+    private boolean checkParams(int idUtente, String isbn, String dataInizio, String dataFine, String restituito) {
+        return false;
+    }
 
     @POST
     @Path("/restituzione")
@@ -214,7 +218,7 @@ public class Library {
     public Response create(@FormParam("idPrestito") int idPrestito,
                            @FormParam("ISBN") String isbn,
                            @FormParam("restituito") String restituito){
-        if(checkParams(idPrestito, ISBN, restituito)) {
+        if(checkParams(idPrestito, isbn, restituito)) {
             String obj = new Gson().toJson("Parameters must be valid");
             return Response.serverError().entity(obj).build();
         }
@@ -242,8 +246,12 @@ public class Library {
             String obj = new Gson().toJson(error);
             return Response.serverError().entity(obj).build();
         }
-        String obj = new Gson().toJson("Libro con ISBN:" + ISBN + " aggiunto con successo");
+        String obj = new Gson().toJson("Libro con ISBN:" + isbn + " aggiunto con successo");
         return Response.ok(obj,MediaType.APPLICATION_JSON).build();
+    }
+
+    private boolean checkParams(int idPrestito, String isbn, String restituito) {
+        return false;
     }
 
 
