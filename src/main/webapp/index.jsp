@@ -12,11 +12,12 @@
 
     th,
     td {
-      text-align: left;
+      text-align: center;
       padding: 8px;
     }
 
     tr:nth-child(even) {
+      text-align: center;
       background-color: #f2f2f2
     }
 
@@ -42,8 +43,7 @@
 
           text += "<td>" + dati[x].ISBN + "</td></tr>";
 
-          text += "<td align='center'> <button type='button' onclick='showUpdate(" + dati[x].ISBN + ")'> Aggiorna </button> </td> ";
-          text += "<td align='center'> <button type='button' onclick='loadDelete(" + dati[x].ISBN + ")'>Cancella</button></td>";
+          text += "<tr><td> <button type='button' onclick='showUpdate(" + dati[x].ISBN + ")'> Aggiorna </button> <button type='button' onclick='loadDelete(" + dati[x].ISBN + ")'>Cancella</button></td></tr>";
         }
         text += "</table>";
         document.getElementById("libriDisponibili").innerHTML = text;
