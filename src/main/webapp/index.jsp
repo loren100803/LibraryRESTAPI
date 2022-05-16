@@ -46,7 +46,7 @@ function del(x)
 <body>
 
 <h2>The XMLHttpRequest Object</h2>
-<button type="button" onclick="loadDoc()">Request data</button>
+<button type="button" onclick="loadDoc()">Visualizza Libri</button>
 
 <p id="demo"></p>
 
