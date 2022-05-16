@@ -16,7 +16,7 @@ function loadDoc() {
         text +="<td>"+dati[x].Titolo+"</td>";
         
         text +="<td>"+dati[x].ISBN+"</td></tr>";
-        text +="<td> <button type='button' onclick='delete("+dati[x].ISBN+")'>Delete</button></td>";
+        text +="<td> <button type='button' onclick='del("+dati[x].ISBN+")'>Delete</button></td>";
     }
     text +="</table>";
     document.getElementById("demo").innerHTML=text;
@@ -31,13 +31,18 @@ function loadDoc() {
   xhttp.send();
 }
 
-function del(x)
-{
-    xhhtp.open("GET", "api/book/delete?ISBN="+x);
-    //popolo l'intestazione
-  xhttp.setRequestHeader("accept","application/json");
-  //richiamo l'URL
-  xhttp.send();
+function del(x) {
+  var formBody = new URLSearchParams({'ISBN': x});
+
+    
+      let res = fetch("/api/book/delete", {
+        method: "DELETE",
+        body: formBody,
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        }
+      });
+ 
 }
 
 
