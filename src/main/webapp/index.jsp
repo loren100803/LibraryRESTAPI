@@ -1,48 +1,74 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script>
-function loadDoc() {
-  const xhttp = new XMLHttpRequest();
-  //gestione risposta
-  xhttp.onload = function() {
-    document.getElementById("libriDisponibili").innerHTML = this.responseText;
-    //effettuo il parsing della risposta
-    let dati=JSON.parse(this.responseText); 
-    //inserisco i dati nell'interfaccia
-    let text ="<table border='1'> <th>Autore</th><th>Titolo</th><th>ISBN</th>";
-    for (let x in dati){
-        text +="<tr><td>"+dati[x].Autore+"</td>";
-        text +="<td>"+dati[x].Titolo+"</td>";
-        
-        text +="<td>"+dati[x].ISBN+"</td></tr>";
 
-        text += "<td> <button type='button' onclick='showUpdate(" + dati[x].ISBN + ")'> Aggiorna </button> </td> ";
-        text +="<td> <button type='button' onclick='loadDelete("+dati[x].ISBN+")'>Cancella</button></td>";
+<head>
+  <title>ClientGestioneBiblioteca</title>
+
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
     }
-    text +="</table>";
-    document.getElementById("libriDisponibili").innerHTML=text;
 
-  }
-  //preparo l'URL
-  xhttp.open("GET", "api/book/all");
-  //popolo l'intestazione
-  xhttp.setRequestHeader("accept","application/json");
-  //richiamo l'URL
-  xhttp.send();
-}
+    th,
+    td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2
+    }
+
+    th {
+      background-color: #04AA6D;
+      color: white;
+    }
+  </style>
+
+  <script>
+    function loadDoc() {
+      const xhttp = new XMLHttpRequest();
+      //gestione risposta
+      xhttp.onload = function () {
+        document.getElementById("libriDisponibili").innerHTML = this.responseText;
+        //effettuo il parsing della risposta
+        let dati = JSON.parse(this.responseText);
+        //inserisco i dati nell'interfaccia
+        let text = "<table border='1'> <th>Autore</th><th>Titolo</th><th>ISBN</th>";
+        for (let x in dati) {
+          text += "<tr><td>" + dati[x].Autore + "</td>";
+          text += "<td>" + dati[x].Titolo + "</td>";
+
+          text += "<td>" + dati[x].ISBN + "</td></tr>";
+
+          text += "<td align='center'> <button type='button' onclick='showUpdate(" + dati[x].ISBN + ")'> Aggiorna </button> </td> ";
+          text += "<td align='center'> <button type='button' onclick='loadDelete(" + dati[x].ISBN + ")'>Cancella</button></td>";
+        }
+        text += "</table>";
+        document.getElementById("libriDisponibili").innerHTML = text;
+
+      }
+      //preparo l'URL
+      xhttp.open("GET", "api/book/all");
+      //popolo l'intestazione
+      xhttp.setRequestHeader("accept", "application/json");
+      //richiamo l'URL
+      xhttp.send();
+    }
 
 
-function Aggiorna() {  
-  location.reload();  
-} 
+    function Aggiorna() {
+      location.reload();
+
+    }
 
 
 
 
 
 
-function loadDelete(x) {
+    function loadDelete(x) {
       var formBody = new URLSearchParams({ 'ISBN': x });
 
 
@@ -54,6 +80,7 @@ function loadDelete(x) {
         }
       });
 
+      Aggiorna();
     }
 
     function loadInsert(ISBN, Autore, Titolo) {
@@ -69,7 +96,7 @@ function loadDelete(x) {
       });
 
       Aggiorna();
-      LoadDoc();
+
     }
 
     function loadUpdate(ISBN, Autore, Titolo) {
@@ -83,9 +110,9 @@ function loadDelete(x) {
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         }
       });
-      
+
       Aggiorna();
-      LoadDoc();
+
     }
 
 
@@ -95,12 +122,12 @@ function loadDelete(x) {
     function showUpdate(x) {
       document.getElementById("zonaUpdate").innerHTML = this.responseText;
       let text1 = "<form>";
-        let funzione='loadUpdate('+x+', document.getElementById("autore1").value, document.getElementById("titolo1").value)';
-      text1+= "<input type='text' id='isbn1' value='" + x + "' readonly></input>";
+      let funzione = 'loadUpdate(' + x + ', document.getElementById("autore1").value, document.getElementById("titolo1").value)';
+      text1 += "<input type='text' id='isbn1' value='" + x + "' readonly></input>";
       text1 += "<input type='text' id='autore1' placeholder='Autore'>";
       text1 += "<input type='text'  id='titolo1' placeholder='Titolo'>";
-      text1 += "<button type='button' onclick='"+funzione+"'>Aggiorna Libro</button>";
-      text1+= "</form>";
+      text1 += "<button type='button' onclick='" + funzione + "'>Aggiorna Libro</button>";
+      text1 += "</form>";
       document.getElementById("zonaUpdate").innerHTML = text1;
     }
 
@@ -109,14 +136,14 @@ function loadDelete(x) {
     function showAdd() {
       document.getElementById("zonaInsert").innerHTML = this.responseText;
       let text1 = "<form>";
-        let funzione='loadInsert(document.getElementById("isbn").value, document.getElementById("autore").value, document.getElementById("titolo").value)';
+      let funzione = 'loadInsert(document.getElementById("isbn").value, document.getElementById("autore").value, document.getElementById("titolo").value)';
       text1 += "<input type='text' id='isbn' placeholder='ISBN'>";
       text1 += "<input type='text' id='autore' placeholder='Autore'>";
       text1 += "<input type='text'  id='titolo' placeholder='Titolo'>";
-      text1 += "<button type='button' onclick='"+funzione+"'>Aggiungi Libro</button>";
+      text1 += "<button type='button' onclick='" + funzione + "'>Aggiungi Libro</button>";
       text1 += "</form>";
       document.getElementById("zonaInsert").innerHTML = text1;
-      
+
 
     }
 
@@ -130,7 +157,7 @@ function loadDelete(x) {
 
   <button type="button" onclick="loadDoc()">Mostra Libri Disponibili</button>
   <button type="button" onclick="showAdd()">Aggiungi Libri</button>
- 
+
 
   <p id="libriDisponibili"></p>
   <p id="zonaUpdate"></p>

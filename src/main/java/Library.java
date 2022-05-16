@@ -94,8 +94,8 @@ public class Library {
                 PreparedStatement pstmt = conn.prepareStatement( QUERY )
         ) {
             pstmt.setString(1,isbn);
-            pstmt.setString(2,autore);
-            pstmt.setString(3,titolo);
+            pstmt.setString(2,titolo);
+            pstmt.setString(3,autore);
             pstmt.execute();
         }catch (SQLException e){
             e.printStackTrace();
