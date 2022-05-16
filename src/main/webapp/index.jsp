@@ -68,7 +68,8 @@ function loadDelete(x) {
         }
       });
 
-      
+      Aggiorna();
+      LoadDoc();
     }
 
     function loadUpdate(ISBN, Autore, Titolo) {
@@ -82,6 +83,9 @@ function loadDelete(x) {
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         }
       });
+      
+      Aggiorna();
+      LoadDoc();
     }
 
 
@@ -93,8 +97,8 @@ function loadDelete(x) {
       let text1 = "<form>";
         let funzione='loadUpdate('+x+', document.getElementById("autore1").value, document.getElementById("titolo1").value)';
       text1+= "<input type='text' id='isbn1' value='" + x + "' readonly></input>";
-      text1 += "<input type='text' id='autore1' placeholder='autore'>";
-      text1 += "<input type='text'  id='titolo1' placeholder='titolo'>";
+      text1 += "<input type='text' id='autore1' placeholder='Autore'>";
+      text1 += "<input type='text'  id='titolo1' placeholder='Titolo'>";
       text1 += "<button type='button' onclick='"+funzione+"'>Aggiorna Libro</button>";
       text1+= "</form>";
       document.getElementById("zonaUpdate").innerHTML = text1;
@@ -106,11 +110,11 @@ function loadDelete(x) {
       document.getElementById("zonaInsert").innerHTML = this.responseText;
       let text1 = "<form>";
         let funzione='loadInsert(document.getElementById("isbn").value, document.getElementById("autore").value, document.getElementById("titolo").value)';
-      text1+= "<input type='text' id='isbn' placeholder='ISBN'";
-      text1 += "<input type='text' id='autore' placeholder='autore'>";
-      text1 += "<input type='text'  id='titolo' placeholder='titolo'>";
+      text1 += "<input type='text' id='isbn' placeholder='ISBN'>";
+      text1 += "<input type='text' id='autore' placeholder='Autore'>";
+      text1 += "<input type='text'  id='titolo' placeholder='Titolo'>";
       text1 += "<button type='button' onclick='"+funzione+"'>Aggiungi Libro</button>";
-      text1+= "</form>";
+      text1 += "</form>";
       document.getElementById("zonaInsert").innerHTML = text1;
       
 
