@@ -6,7 +6,7 @@ function loadDoc() {
   const xhttp = new XMLHttpRequest();
   //gestione risposta
   xhttp.onload = function() {
-    document.getElementById("demo").innerHTML = this.responseText;
+    document.getElementById("libriDisponibili").innerHTML = this.responseText;
     //effettuo il parsing della risposta
     let dati=JSON.parse(this.responseText); 
     //inserisco i dati nell'interfaccia
@@ -16,12 +16,13 @@ function loadDoc() {
         text +="<td>"+dati[x].Titolo+"</td>";
         
         text +="<td>"+dati[x].ISBN+"</td></tr>";
-        text +="<td> <button type='button' onclick='del("+dati[x].ISBN+")'>Delete</button></td>";
+
+        text += "<td> <button type='button' onclick='showUpdate(" + dati[x].ISBN + ")'> Aggiorna </button> </td> ";
+        text +="<td> <button type='button' onclick='loadDelete("+dati[x].ISBN+")'>Cancella</button></td>";
     }
     text +="</table>";
-    document.getElementById("demo").innerHTML=text;
-    //document.getElementById("num").value=dati[0].id;
-    //document.getElementById("nom").value=dati[0].info;
+    document.getElementById("libriDisponibili").innerHTML=text;
+
   }
   //preparo l'URL
   xhttp.open("GET", "api/book/all");
@@ -31,34 +32,105 @@ function loadDoc() {
   xhttp.send();
 }
 
-function del(x) {
-  var formBody = new URLSearchParams({'ISBN': x});
 
-    
+function Aggiorna() {  
+  location.reload();  
+} 
+
+
+
+
+
+
+function loadDelete(x) {
+      var formBody = new URLSearchParams({ 'ISBN': x });
+
+
       let res = fetch("/api/book/delete", {
         method: "DELETE",
         body: formBody,
         headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         }
       });
- 
-}
+
+    }
+
+    function loadInsert(ISBN, Autore, Titolo) {
+      var formBody = new URLSearchParams({ 'ISBN': ISBN, 'Titolo': Titolo, 'Autore': Autore });
 
 
-</script>
-    </head>
+      let res = fetch("/api/book/add", {
+        method: "POST",
+        body: formBody,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        }
+      });
+
+      
+    }
+
+    function loadUpdate(ISBN, Autore, Titolo) {
+      var formBody = new URLSearchParams({ 'ISBN': ISBN, 'Titolo': Titolo, 'Autore': Autore });
+
+
+      let res = fetch("/api/book/update", {
+        method: "PUT",
+        body: formBody,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        }
+      });
+    }
+
+
+
+
+
+    function showUpdate(x) {
+      document.getElementById("zonaUpdate").innerHTML = this.responseText;
+      let text1 = "<form>";
+        let funzione='loadUpdate('+x+', document.getElementById("autore1").value, document.getElementById("titolo1").value)';
+      text1+= "<input type='text' id='isbn1' value='" + x + "' readonly></input>";
+      text1 += "<input type='text' id='autore1' placeholder='autore'>";
+      text1 += "<input type='text'  id='titolo1' placeholder='titolo'>";
+      text1 += "<button type='button' onclick='"+funzione+"'>Aggiorna Libro</button>";
+      text1+= "</form>";
+      document.getElementById("zonaUpdate").innerHTML = text1;
+    }
+
+
+
+    function showAdd() {
+      document.getElementById("zonaInsert").innerHTML = this.responseText;
+      let text1 = "<form>";
+        let funzione='loadInsert(document.getElementById("isbn").value, document.getElementById("autore").value, document.getElementById("titolo").value)';
+      text1+= "<input type='text' id='isbn' placeholder='ISBN'";
+      text1 += "<input type='text' id='autore' placeholder='autore'>";
+      text1 += "<input type='text'  id='titolo' placeholder='titolo'>";
+      text1 += "<button type='button' onclick='"+funzione+"'>Aggiungi Libro</button>";
+      text1+= "</form>";
+      document.getElementById("zonaInsert").innerHTML = text1;
+      
+
+    }
+
+  </script>
+</head>
+
 <body>
 
-<h2>The XMLHttpRequest Object</h2>
-<button type="button" onclick="loadDoc()">Visualizza Libri</button>
+  <h1 align="center">GESTIONE PAGINA BIBLIOTECA</h1>
+  <h4 align="center">Benvenuto</h4>
 
-<p id="demo"></p>
+  <button type="button" onclick="loadDoc()">Mostra Libri Disponibili</button>
+  <button type="button" onclick="showAdd()">Aggiungi Libri</button>
+ 
 
-<form>
-    
-    id<input type="text" name="num" id="num">
-    info<input type="text" name="nom" id="nom">    
-</form>
+  <p id="libriDisponibili"></p>
+  <p id="zonaUpdate"></p>
+  <p id="zonaInsert"></p>
 </body>
+
 </html>
